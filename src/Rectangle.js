@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Line, Transformer } from "react-konva";
 
-function Rectangle({ shapeProps, isSelected, onSelect, onChange }) {
+function Rectangle({ shapeProps, isSelected, onSelect, onChange, color }) {
   const shapeRef = useRef();
   const trRef = useRef();
 
@@ -18,7 +18,7 @@ function Rectangle({ shapeProps, isSelected, onSelect, onChange }) {
       <Line
         points={[50, 50, 150, 50, 100, 150]}
         tension={0.5}
-        fill={"yellow"}
+        fill={color}
         onClick={onSelect}
         onTap={onSelect}
         ref={shapeRef}
