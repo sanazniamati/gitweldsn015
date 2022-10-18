@@ -23,6 +23,7 @@ function Rectangle({ shapeProps, isSelected, onSelect, onChange, color }) {
         onTap={onSelect}
         ref={shapeRef}
         {...shapeProps}
+        stroke={"darkGreen"}
         closed
         draggable
         onDragEnd={(e) => {

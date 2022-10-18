@@ -3,17 +3,8 @@ import React, { Fragment, useState } from "react";
 import { Group, Layer, Stage } from "react-konva";
 import Rectangle from "./Rectangle";
 import Konva from "konva";
-function generateShapes() {
-  return [...Array(10)].map((_, i) => ({
-    id: i.toString(),
-    x: Math.random() + 100,
-    y: Math.random() + 100,
-    color: Konva.Util.getRandomColor(),
-  }));
-}
-const INITIAL_STATE = generateShapes();
+
 function App() {
-  const [sheklha, setSheklha] = useState(INITIAL_STATE);
   const [selectShape, setSelectShape] = useState(null);
   const [blobs, setBlobs] = useState([]);
   const checkDeselect = (e) => {
@@ -24,7 +15,14 @@ function App() {
     }
   };
   const handelCreateBlob = () => {
-    setBlobs((prevBlobs) => [...prevBlobs]);
+    setBlobs((prevBlobs) => [
+      ...prevBlobs,
+      {
+        id: blobs.toString(),
+        x: blobs.length * 150,
+        color: Konva.Util.getRandomColor(),
+      },
+    ]);
     console.log(blobs);
   };
   return (
@@ -41,31 +39,22 @@ function App() {
       >
         <Layer>
           {blobs.map((blob, g) => (
-            <Group key={g} x={g * 150}>
-              {/*<Fragment key={g}>*/}
-              {sheklha.map((item, i) => {
-                return (
-                  <Rectangle
-                    key={i}
-                    id={item.id}
-                    color={item.color}
-                    shapeProps={item}
-                    isSelected={item.id === selectShape}
-                    onSelect={() => {
-                      setSelectShape(item.id);
-                    }}
-                    onChange={(newAttrs) => {
-                      const copyOfSheklha = sheklha.slice();
-                      copyOfSheklha[i] = newAttrs;
-                      console.log(newAttrs);
-                      setSheklha(copyOfSheklha);
-                    }}
-                  />
-                );
-              })}
-
-              {/*</Fragment>*/}
-            </Group>
+            <Rectangle
+              id={blob.id}
+              color={blob.color}
+              shapeProps={blob}
+              isSelected={blob.id === selectShape}
+              onSelect={() => {
+                setSelectShape(blob.id);
+                console.log("Selected shape" + blob.id);
+              }}
+              onChange={(newAttrs) => {
+                const copyOfSheklha = blobs.slice();
+                copyOfSheklha[g] = newAttrs;
+                // console.log(newAttrs);
+                setBlobs(copyOfSheklha);
+              }}
+            />
           ))}
         </Layer>
       </Stage>
