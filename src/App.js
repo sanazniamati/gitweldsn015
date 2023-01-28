@@ -41,7 +41,7 @@ function App() {
           {blobs.map((blob, g) => (
             <Rectangle
               id={blob.id}
-              color={blob.color}
+              // color={blob.color}
               shapeProps={blob}
               isSelected={blob.id === selectShape}
               onSelect={() => {
