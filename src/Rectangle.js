@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from "react";
-import { Line, Transformer } from "react-konva";
+import { Circle, Line, Transformer } from "react-konva";
 
 function Rectangle({ shapeProps, isSelected, onSelect, onChange, color }) {
   const shapeRef = useRef();
   const trRef = useRef();
+  let nodeWidth;
 
   useEffect(() => {
     if (isSelected) {
@@ -42,14 +43,16 @@ function Rectangle({ shapeProps, isSelected, onSelect, onChange, color }) {
           const scaleX = node.scaleX();
           const scaleY = node.scaleY();
           const rotation = node.rotation();
-          console.log("scaleX", scaleX.toFixed(2), scaleY.toFixed(2));
-          console.log("node.width():", node.width());
-          console.log("scaleY", scaleY.toFixed(2));
-          console.log("rotation", rotation.toFixed(2));
+          nodeWidth = node.points();
+          // console.log("scaleX,scaleY :", scaleX.toFixed(2), scaleY.toFixed(2));
+          // console.log("node.width():", node.width());
+          // console.log("node.height():", node.height());
+          // console.log("scaleY", scaleY.toFixed(2));
+          // console.log("rotation", rotation.toFixed(2));
           // we will reset it back
           node.scaleX(1);
           node.scaleY(1);
-          console.log("scaleX after reset", node.scaleX());
+          // console.log("scaleX after reset", node.scaleX());
 
           onChange({
             ...shapeProps,
@@ -66,8 +69,15 @@ function Rectangle({ shapeProps, isSelected, onSelect, onChange, color }) {
             // width: Math.max(50, node.width() * scaleX),
             // height: Math.max(50,node.height() * scaleY),
           });
+
+          let newPoints = node.points();
+          let newXofCircle = newPoints[4];
+          console.log("newPoints :" + newPoints);
+          console.log("newPoints :" + newXofCircle);
         }}
       />
+      <Circle x={100} y={80} fill={"black"} radius={5} />
+
       {isSelected && (
         <>
           <Transformer
@@ -84,6 +94,7 @@ function Rectangle({ shapeProps, isSelected, onSelect, onChange, color }) {
               if (newBox.width < 55 || newBox.height < 55) {
                 return oldBox;
               }
+
               return newBox;
             }}
           />

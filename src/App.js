@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 
-import { Group, Layer, Stage } from "react-konva";
+import { Circle, Layer, Stage } from "react-konva";
 import Rectangle from "./Rectangle";
 import Konva from "konva";
 
@@ -40,6 +40,7 @@ function App() {
         <Layer>
           {blobs.map((blob, g) => (
             <Rectangle
+              key={g}
               id={blob.id}
               // color={blob.color}
               shapeProps={blob}
