@@ -34,14 +34,11 @@ function TransformerRectangle({
   }, [isSelected]);
   const onClick = (e) => {
     const metaPressed = e.evt.shiftKey || e.evt.ctrlKey;
-
     let newIds = [];
-
     if (!metaPressed && isSelected) {
       // do nothing if node is selected and no key pressed
       return;
     }
-
     if (!metaPressed && !isSelected) {
       // if no key pressed and the node is not selected
       newIds = [shapeId];
@@ -53,7 +50,6 @@ function TransformerRectangle({
       // add the node into selection
       newIds = selectShape.concat(shapeId);
     }
-
     onSelect(newIds);
   };
   return (
@@ -63,8 +59,6 @@ function TransformerRectangle({
         points={[50, 50, 150, 50, 100, 150]}
         tension={0.5}
         fill={color}
-        opacity={0.4}
-        // onClick={onSelect}
         onClick={onClick}
         {...shapeProps}
         stroke={"darkGreen"}
@@ -93,7 +87,6 @@ function TransformerRectangle({
             anchorCornerRadius={5}
             anchorStrokeWidth={2}
             anchorSize={20}
-            // rotateAnchorOffset={48}
             ref={trRef}
             boundBoxFunc={(oldBox, newBox) => {
               // limit resize

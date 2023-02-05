@@ -46,7 +46,6 @@ function App() {
               id={blob.id}
               color={blob.color}
               shapeProps={blob}
-              // isSelected={blob.id === selectShape}
               isSelected={selectShape.findIndex((id) => id === blob.id) >= 0}
               // onSelect={() => {
               //   setSelectShape(blob.id);
