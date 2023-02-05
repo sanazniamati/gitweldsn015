@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Circle, Line, Transformer } from "react-konva";
+import { Line, Transformer } from "react-konva";
 
 function TransformerRectangle({
   shapeProps,
@@ -7,29 +7,65 @@ function TransformerRectangle({
   onSelect,
   onChange,
   color,
+  selectShape,
 }) {
   const shapeRef = useRef();
   const trRef = useRef();
-  // let nodeWidth;
+  const shapeId = shapeProps.id;
 
   useEffect(() => {
+    // const oldNodes = trRef.current.nodes();
+    // let selectedNodes;
+    // if (isSelected) {
+    //   // add current node to Transformer's nodes
+    //   const newNodes = oldNodes.concat(shapeRef.current);
+    //   selectedNodes = trRef.current.nodes(newNodes);
+    // } else {
+    //   // remove current node from Transformer's nodes
+    //   const newNodes = oldNodes.filter((node) => node.id() !== shapeId);
+    //   selectedNodes = trRef.current.nodes(newNodes);
+    // }
+    // selectedNodes.getLayer().batchDraw();
     if (isSelected) {
       // we need to attach transformer manually
       trRef.current.nodes([shapeRef.current]);
       trRef.current.getLayer().batchDraw();
     }
   }, [isSelected]);
+  const onClick = (e) => {
+    const metaPressed = e.evt.shiftKey || e.evt.ctrlKey;
 
+    let newIds = [];
+
+    if (!metaPressed && isSelected) {
+      // do nothing if node is selected and no key pressed
+      return;
+    }
+
+    if (!metaPressed && !isSelected) {
+      // if no key pressed and the node is not selected
+      newIds = [shapeId];
+    } else if (metaPressed && isSelected) {
+      // if we pressed keys and node was selected
+      // we need to remove it from selection
+      newIds = selectShape.filter((i) => i !== shapeId);
+    } else if (metaPressed && !isSelected) {
+      // add the node into selection
+      newIds = selectShape.concat(shapeId);
+    }
+
+    onSelect(newIds);
+  };
   return (
     <React.Fragment>
       <Line
+        ref={shapeRef}
         points={[50, 50, 150, 50, 100, 150]}
         tension={0.5}
         fill={color}
         opacity={0.4}
-        onClick={onSelect}
-        onTap={onSelect}
-        ref={shapeRef}
+        // onClick={onSelect}
+        onClick={onClick}
         {...shapeProps}
         stroke={"darkGreen"}
         closed
@@ -37,55 +73,18 @@ function TransformerRectangle({
         onDragEnd={(e) => {
           onChange({
             ...shapeProps,
-            x: Math.floor(e.target.x()),
-            y: Math.floor(e.target.y()),
+            x: e.target.x(),
+            y: e.target.y(),
           });
         }}
-        onTransformEnd={(e) => {
-          // transformer is changing scale of the node
-          // and NOT its width or height
-          // but in the store we have only width and height
-          // to match the data better we will reset scale on transform end
-          // const node = shapeRef.current;
-          // const scaleX = node.scaleX();
-          // const scaleY = node.scaleY();
-          // const rotation = node.rotation();
-          // nodeWidth = node.points();
-          // console.log("scaleX,scaleY :", scaleX.toFixed(2), scaleY.toFixed(2));
-          // console.log("node.width():", node.width());
-          // console.log("node.height():", node.height());
-          // console.log("scaleY", scaleY.toFixed(2));
-          // console.log("rotation", rotation.toFixed(2));
-          // we will reset it back
-          // node.scaleX(1);
-          // node.scaleY(1);
-          // console.log("scaleX after reset", node.scaleX());
-
+        onTransformEnd={() => {
           onChange({
             ...shapeProps,
-            //x: Math.floor(node.x()),
-            //y: Math.floor(node.y()),
-            // set minimal value
-            // points: node
-            //   .points()
-            //   .map((num, ind) =>
-            //     Math.floor(num * (ind % 2 === 0 ? scaleX : scaleY))
-            //   ),
-            //points: node.points().map((num,ind) => num * (ind % 2 === 0 ? scaleX : scaleY)),
-            //filtered: filtered.map(a => a * scaleX),
-            // width: Math.max(50, node.width() * scaleX),
-            // height: Math.max(50,node.height() * scaleY),
           });
-          //
-          // let newPoints = node.points();
-          // let newXofCircle = newPoints[4];
-          // console.log("newPoints :" + newPoints);
-          // console.log("newPoints :" + newXofCircle);
         }}
       />
-      {/*<Circle x={100} y={80} fill={"black"} radius={5} />*/}
 
-      {isSelected && (
+      {shapeId && (
         <>
           <Transformer
             borderStroke={"darkGreen"}
