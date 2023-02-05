@@ -1,17 +1,17 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 
-import { Circle, Layer, Stage } from "react-konva";
-import Rectangle from "./Rectangle";
+import { Layer, Stage } from "react-konva";
+import TransformerRectangle from "./TransformerRectangle";
 import Konva from "konva";
 
 function App() {
-  const [selectShape, setSelectShape] = useState(null);
+  const [selectShape, setSelectShape] = useState([]);
   const [blobs, setBlobs] = useState([]);
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
-      setSelectShape(null);
+      setSelectShape([]);
     }
   };
   const handelCreateBlob = () => {
@@ -23,7 +23,7 @@ function App() {
         color: Konva.Util.getRandomColor(),
       },
     ]);
-    console.log(blobs);
+    console.log();
   };
   return (
     <>
@@ -39,20 +39,18 @@ function App() {
       >
         <Layer>
           {blobs.map((blob, g) => (
-            <Rectangle
+            <TransformerRectangle
               key={g}
               id={blob.id}
-              // color={blob.color}
+              color={blob.color}
               shapeProps={blob}
               isSelected={blob.id === selectShape}
               onSelect={() => {
                 setSelectShape(blob.id);
-                console.log("Selected shape" + blob.id);
               }}
               onChange={(newAttrs) => {
                 const copyOfSheklha = blobs.slice();
                 copyOfSheklha[g] = newAttrs;
-                // console.log(newAttrs);
                 setBlobs(copyOfSheklha);
               }}
             />
