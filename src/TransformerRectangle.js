@@ -1,65 +1,46 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Line, Transformer } from "react-konva";
-
+import { Html } from "react-konva-utils";
 function TransformerRectangle({
   shapeProps,
   isSelected,
   onSelect,
   onChange,
   color,
-  selectShape,
 }) {
   const shapeRef = useRef();
   const trRef = useRef();
-  const shapeId = shapeProps.id;
+
+  const [unShow, setUnShow] = useState(true);
 
   useEffect(() => {
-    // const oldNodes = trRef.current.nodes();
-    // let selectedNodes;
-    // if (isSelected) {
-    //   // add current node to Transformer's nodes
-    //   const newNodes = oldNodes.concat(shapeRef.current);
-    //   selectedNodes = trRef.current.nodes(newNodes);
-    // } else {
-    //   // remove current node from Transformer's nodes
-    //   const newNodes = oldNodes.filter((node) => node.id() !== shapeId);
-    //   selectedNodes = trRef.current.nodes(newNodes);
-    // }
-    // selectedNodes.getLayer().batchDraw();
     if (isSelected) {
       // we need to attach transformer manually
       trRef.current.nodes([shapeRef.current]);
       trRef.current.getLayer().batchDraw();
     }
   }, [isSelected]);
-  const onClick = (e) => {
-    const metaPressed = e.evt.shiftKey || e.evt.ctrlKey;
-    let newIds = [];
-    if (!metaPressed && isSelected) {
-      // do nothing if node is selected and no key pressed
-      return;
+  const handelDelete = () => {
+    // const result = blobs.filter((id) => id === shapeProps.id);
+    // console.log(result);
+
+    if (isSelected) {
+      setUnShow(false);
     }
-    if (!metaPressed && !isSelected) {
-      // if no key pressed and the node is not selected
-      newIds = [shapeId];
-    } else if (metaPressed && isSelected) {
-      // if we pressed keys and node was selected
-      // we need to remove it from selection
-      newIds = selectShape.filter((i) => i !== shapeId);
-    } else if (metaPressed && !isSelected) {
-      // add the node into selection
-      newIds = selectShape.concat(shapeId);
-    }
-    onSelect(newIds);
   };
   return (
     <React.Fragment>
+      <Html>
+        <button onClick={handelDelete}>Delete</button>
+      </Html>
+
       <Line
+        visible={unShow}
         ref={shapeRef}
         points={[50, 50, 150, 50, 100, 150]}
         tension={0.5}
         fill={color}
-        onClick={onClick}
+        onClick={onSelect}
         {...shapeProps}
         stroke={"darkGreen"}
         closed
@@ -78,9 +59,10 @@ function TransformerRectangle({
         }}
       />
 
-      {shapeId && (
+      {isSelected && (
         <>
           <Transformer
+            visible={unShow}
             borderStroke={"darkGreen"}
             borderDash={[10, 5]}
             borderStrokeWidth={5}

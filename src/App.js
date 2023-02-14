@@ -22,11 +22,8 @@ function App() {
         color: Konva.Util.getRandomColor(),
       },
     ]);
-    console.log();
   };
-  const handelSelect = useCallback((id) => {
-    setSelectShape(id);
-  }, []);
+
   return (
     <>
       <button onClick={handelCreateBlob}> CreateBlob</button>
@@ -46,17 +43,16 @@ function App() {
               id={blob.id}
               color={blob.color}
               shapeProps={blob}
-              isSelected={selectShape.findIndex((id) => id === blob.id) >= 0}
-              // onSelect={() => {
-              //   setSelectShape(blob.id);
-              // }}
-              onSelect={handelSelect}
+              isSelected={blob.id === selectShape}
+              onSelect={() => {
+                setSelectShape(blob.id);
+              }}
               onChange={(newAttrs) => {
                 const copyOfSheklha = blobs.slice();
                 copyOfSheklha[g] = newAttrs;
                 setBlobs(copyOfSheklha);
               }}
-              selectShape={selectShape}
+              blobs={blobs}
             />
           ))}
         </Layer>
